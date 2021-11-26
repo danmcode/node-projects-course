@@ -1,21 +1,11 @@
-const fs = require('fs'); //Requerir el paquete file system
+const { crearArchivo } = require('./helpers/multiplicar');
 
 console.clear(); //Limpiar consola
+//obtener la base entrada de consola concepto
 
-const   base    = 5;
-let     salida  = '';
 
-console.log('======================');
-console.log(`  Tabla del ${ base } `);
-console.log('======================');
+const base = 3;
 
-for (let index = 1; index <= 10; index++) {
-
-    salida = `${ base } x ${ index } = ${ base * index }\n`;
-}
-
-fs.writeFile(`tabla-${ base }.txt`, salida, ( err )=>{
-    if( err ) throw err;
-
-    console.log(`tabla-${ base }.txt creada`);
-});
+crearArchivo(base)
+    .then( nombreArchivo => console.log(nombreArchivo, 'creado') )
+    .catch( err => console.log(err) );
