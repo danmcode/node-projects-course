@@ -1,6 +1,6 @@
 const fs = require('fs'); //Requerir el paquete file system
 
-const crearArchivo = async( base = 5 ) => {
+const crearArchivo = async( base = 5, list = false ) => {
 
     try {
         console.log('======================');
@@ -12,8 +12,10 @@ const crearArchivo = async( base = 5 ) => {
         for (let index = 1; index <= 10; index++) {
             salida += `${ base } x ${ index } = ${ base * index }\n`;
         }
-
-        console.log(salida);
+        
+        if ( list ) {
+            console.log(salida);
+        }
 
         fs.writeFile(`tabla-${ base }.txt`, salida, ( err )=>{
             if( err ) throw err;
