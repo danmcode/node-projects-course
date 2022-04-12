@@ -24,6 +24,12 @@ class Tareas {
         this._listado = {};
     }
 
+    deleteTask( id='' ){
+        if( this._listado[id] ){
+            delete this._listado[id];
+        }
+    }
+
     cargarTareasFromArray(tareas = []) {
 
         tareas.forEach(tarea => {
@@ -38,37 +44,47 @@ class Tareas {
     }
 
     listadoCompleto() {
-        // 1. en Verde
-        // Completada Verde
-        // Pendiente: rojo]
-        // console.log();
-        // let completado = "Pendiente".red;
-
-        // this.listadoArr.forEach((tarea, index) => {
-
-        //     if( tarea.completadoEn ){
-        //         completado = "Pendiente".green;
-        //     }
-        //     let num = (index + 1) + '.';
-        //     console.log( `${ num.green } ${ tarea.desc }::${ completado }` );
-        // });
-
-        //Otra forma
         console.log();
         this.listadoArr.forEach((tarea, index) => {
-            
-            const num = `${ index + 1 }`.green;
+
+            const num = `${index + 1}`.green;
             const { desc, completadoEn } = tarea;
-            const estado = ( completadoEn )
-                            ? 'Completado'.green
-                            : 'Pendiente'.red;
-            
-            console.log(`${ num } ${ desc } :: ${estado}`);
+            const estado = (completadoEn)
+                ? 'Completado'.green
+                : 'Pendiente'.red;
 
-        });
+            console.log(`${num} ${desc} :: ${estado}`);
 
-        //1. Alma :: Completada | Pentiente
+        });   //1. Alma :: Completada | Pentiente
     }
+
+    listarPendientesCompletadas(completadas = true) {
+
+        console.log();
+        let counter = 0;
+        this.listadoArr.forEach(tarea => {
+
+            const { desc, completadoEn } = tarea;
+
+            const estado = (completadoEn)
+                ? 'Completado'.green
+                : 'Pendiente'.red;
+
+            if (completadas) {
+                if (completadoEn) {
+                    counter += 1;
+                    console.log(`${(counter + '.').green} ${desc} :: ${completadoEn}`);
+                }
+            } else {
+                if (!completadoEn) {
+                    counter += 1;
+                    console.log(`${(counter + '.').green} ${desc} :: ${estado}`);
+                }
+            }
+        });
+    }
+
+
 }
 
 module.exports = Tareas;

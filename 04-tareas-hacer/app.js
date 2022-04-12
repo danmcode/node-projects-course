@@ -8,6 +8,9 @@ const {
     inquirerMenu, 
     pausa,
     leerInput,
+    listTaskToDelete,
+    confirm,
+    showCheckList,
 } = require('./helpers/inquirer');
 
 const Tareas = require('./models/tareas')
@@ -40,7 +43,29 @@ const main = async () => {
             case '2':
                 tareas.listadoCompleto();
                 break;
-        }
+            case '3':
+                tareas.listarPendientesCompletadas();
+                break;
+            case '4':
+                tareas.listarPendientesCompletadas(false);
+                break;
+            case '5':
+                const ids = await showCheckList(tareas.listadoArr);
+                console.log(ids);
+                break;
+            case '6':
+                //Delete task
+                const id = await listTaskToDelete( tareas.listadoArr );
+
+                if ( id !== 0 ) {
+                    const confirmed = await confirm('¿Está seguro?');
+                    if (confirmed) {
+                        tareas.deleteTask( id );
+                        console.log('Tarea Borrada');
+                    }
+                }
+                break;
+            }
 
         guardarDB( tareas.listadoArr );
 
