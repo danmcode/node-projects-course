@@ -111,6 +111,7 @@ const listTaskToDelete = async( task = [] ) => {
     const {id} = await inquirer.prompt(preguntas);
     return id;
 }
+
 const showCheckList = async( task = [] ) => {
 
     const choices = task.map(
@@ -135,8 +136,8 @@ const showCheckList = async( task = [] ) => {
         }
     ];
 
-    const {id} = await inquirer.prompt(preguntas);
-    return id;
+    const {ids} = await inquirer.prompt(preguntas);
+    return ids;
 }
 
 const confirm = async (message) => {
