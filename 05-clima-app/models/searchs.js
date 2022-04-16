@@ -1,11 +1,26 @@
+const fs = require('fs');
+
 const axios = require('axios');
+
 
 class Searchs {
 
-    history = ['Tegucigalpa','Madrid','San José'];
+    history = [];
+    dbPath = './db/database.json';
 
     constructor(){
         //TODO: read database if exists
+        this.readDB();
+    }
+
+    get capitalizeHistory(){
+        return this.history.map( place => {
+
+            let words = place.split(' ');
+            words = words.map( p => p[0].toUpperCase() + p.substring(1) );
+
+            return words.join(' ');
+        });
     }
 
     //Peticion
@@ -51,7 +66,7 @@ class Searchs {
     get paramsWheater(){
         return {
             'appid': process.env.OPEN_WEATHER_KEY,
-            'lat': 'metric',
+            'units': 'metric',
             'lang': 'es',
         };
     }
@@ -79,7 +94,42 @@ class Searchs {
             console.log('No search');
             return {};
         }
+    }
 
+    addHistory( place = '' ){
+
+        //TODO: prevent duplicate
+        if (this.history.includes( place.toLocaleLowerCase() )) {
+            return;
+        }
+
+        this.history = this.history.slice(0, 5);
+
+        this.history.unshift( place.toLocaleLowerCase() );
+
+        //Record db
+        this.saveDB();
+    }
+
+    saveDB(){
+
+        const payload = {
+            history: this.history,
+        }
+
+        fs.writeFileSync( this.dbPath, JSON.stringify(payload) );
+    }
+
+    readDB(){
+        //Debe existir....
+        if( !fs.existsSync(this.dbPath) ){
+            return;
+        }
+
+        //const info ... readFileSync... 
+        const info = fs.readFileSync(this.dbPath, { encoding: 'utf-8' });
+        const data = JSON.parse( info );
+        return this.history = data.history;
     }
 
 }

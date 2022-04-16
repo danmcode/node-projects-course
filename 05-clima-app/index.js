@@ -24,9 +24,13 @@ const main = async() => {
                 
                 // Select a place
                 const placeId = await listOfPlaces(places);
+                if( placeId === '0' ) continue;
+
                 //console.log(placeId);
                 const placeSelected = places.find( place => place.id == placeId );
                 //console.log(placeSelected);
+                //Save DB
+                searchs.addHistory(placeSelected.name);
 
                 // Weather city
                 const wheater = await searchs.wheaterPlace(placeSelected.lat, placeSelected.lng);
@@ -41,10 +45,15 @@ const main = async() => {
                 console.log('Mínima:', wheater.min);
                 console.log('Máxima:', wheater.max );
                 console.log('Clima:', wheater.desc.green);
-
                 break;
+
             case 2:
-                console.log('Show History');
+
+                searchs.capitalizeHistory.forEach( (place, i) => {
+                    const idx = `${ i + 1 }.`.green;
+                    console.log(`${ idx } ${ place }`);
+                });
+                
                 break;
             case 0:
                 console.log('Exit');
