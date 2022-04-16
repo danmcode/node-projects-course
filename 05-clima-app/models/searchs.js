@@ -31,14 +31,53 @@ class Searchs {
                 params: this.paramsMapBox,
             });
 
-            const answ =await instance.get();
-            console.log(answ.data);
-    
+            const answ = await instance.get();
+            //console.log(answ.data.features);
+            
             //return the places that coincide with the user search
-            return [];
+            return answ.data.features.map( place => ({
+                id: place.id,
+                name: place.place_name,
+                lng: place.center[0],
+                lat: place.center[1],
+            }));
+
         } catch (error) {
             console.log('error try get city information');
             return [];
+        }
+    }
+
+    get paramsWheater(){
+        return {
+            'appid': process.env.OPEN_WEATHER_KEY,
+            'lat': 'metric',
+            'lang': 'es',
+        };
+    }
+
+    async wheaterPlace(lat, lon){
+        try {
+            // axios instance
+            const instance = axios.create({
+                baseURL: `https://api.openweathermap.org/data/2.5/weather`,
+                params: {...this.paramsWheater, lat, lon}
+            });
+
+            //anws exttract information
+            const answ = await instance.get();
+            const {weather, main} = answ.data;
+
+            return {
+                desc: weather[0].description,
+                min: main.temp_min,
+                max: main.temp_max,
+                temp: main.temp,
+            }
+            
+        } catch (error) {
+            console.log('No search');
+            return {};
         }
 
     }

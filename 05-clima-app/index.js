@@ -1,5 +1,5 @@
 require('dotenv').config(); //envairoment variables
-const { leerInput, inquirerMenu, pausa } = require('./helpers/inquirer');
+const { leerInput, inquirerMenu, pausa, listOfPlaces } = require('./helpers/inquirer');
 const Searchs = require('./models/searchs');
 
 //console.log(process.env.MAPBOX_KEY); //Show mapbox key
@@ -17,22 +17,30 @@ const main = async() => {
         switch ( opt ) {
             case 1:
                 // Show message
-                const place = await leerInput('Ciudad: ');
-                await searchs.city( place );
+                const searchPlace  = await leerInput('Ciudad: ');
+                
                 // Search places
-
+                const places = await searchs.city( searchPlace );
+                
                 // Select a place
+                const placeId = await listOfPlaces(places);
+                //console.log(placeId);
+                const placeSelected = places.find( place => place.id == placeId );
+                //console.log(placeSelected);
 
                 // Weather city
+                const wheater = await searchs.wheaterPlace(placeSelected.lat, placeSelected.lng);
 
                 // Show results
+                console.clear();
                 console.log('\nInformación de la Ciudad\n'.green);
-                console.log('Ciudad: ');
-                console.log('Lat: ');
-                console.log('Lng: ');
-                console.log('Temperatura: ');
-                console.log('Mínima: ');
-                console.log('Máxima: ');
+                console.log('Ciudad:', placeSelected.name.green);
+                console.log('Lat:', placeSelected.lat);
+                console.log('Lng:', placeSelected.lng);
+                console.log('Temperatura:', wheater.temp);
+                console.log('Mínima:', wheater.min);
+                console.log('Máxima:', wheater.max );
+                console.log('Clima:', wheater.desc.green);
 
                 break;
             case 2:
