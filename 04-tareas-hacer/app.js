@@ -28,6 +28,7 @@ const main = async () => {
         tareas.cargarTareasFromArray(tareasDB);
     }
 
+
     do {
         //opt = await mostrarMenu();
         //if(opt !== '0') await pausa();
